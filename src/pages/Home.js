@@ -29,8 +29,9 @@ export default function Home() {
   const musicQuery = useQuery('musics', async () => await Mainservice.get('/musics?populate=*'))
   const musicTrendQuery = useQuery('musicsTrend', async () => await Mainservice.get('/musics?populate=*&filters[trend][$eq]=true'))
   const albumQuery = useQuery('albums', async () => await Mainservice.get('/albums?populate=*'))
+  const artistQuery = useQuery('artist', async () => await Mainservice.get('/artists?populate=*'))
 
-  console.log(albumQuery?.data);
+  console.log("artistQuery:" , artistQuery?.data);
 
 
 
@@ -127,12 +128,17 @@ export default function Home() {
             </div>
             <div className="pb-28">
               <Carouselslider>
-                <SwiperSlide>
-                  <ArtistCard src="image/Mehrad hidden.jpg" Artist="Mehrad Hideen" />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <ArtistCard src="/image/Hiphopologist .jpg" Artist="Hiphopologist" />
-                </SwiperSlide>
+                {artistQuery?.isLoading ? <div className="spiner" /> :
+                  <>
+                    {artistQuery?.data?.data?.data?.map((props, index) => (
+                      <SwiperSlide key={index}>
+                        <ArtistCard src={"https://api.pixelgenius.ir" +  props?.attributes?.avatar?.data?.attributes?.url} Artist={props?.attributes?.name} />
+                      </SwiperSlide>
+                    )
+                    )}
+                  </>
+                }
+
               </Carouselslider>
             </div>
           </div>
